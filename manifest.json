@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Skyward GPA Calculator",
+  "version": "1.0",
+  "description": "Calculate your grade point average with ease with this extension. Simply log into your Skyward account and navigate to your gradebook, where your GPA will be displayed.",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["https://skyward.iscorp.com/scripts/wsisa.dll/WService=wseduallenisdtx/sfgradebook001.w"],
+      "js": ["content.js"]
+    }
+  ]
+}
