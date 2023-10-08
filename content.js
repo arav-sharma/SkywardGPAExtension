@@ -5,43 +5,35 @@ function formatDateAndTime() {
 }
 
 function findGrades () {
-  const grades = [];
-  const gradesGPA = [];
-  const links = document.querySelectorAll('td.fB.fWn.fIl a[data-lit="SM1"]');
+  let gradesGPA = [];
   let rawGPA = 0;
+  const classGrades = document.querySelectorAll('td.fB.fWn.fIl a[data-lit="SM1"]');
 
-  links.forEach(link => {
-    grades.push(link.textContent.trim());
-  });
+  classGrades.forEach((currClassGrade) => {
+    const gradeNum = currClassGrade.textContent.trim();
 
-  grades.forEach(grade => {
-    const calculatedGPADifference = (100 - grade) * 0.05;
+    const calculatedGPADifference = (100 - gradeNum) * 0.05;
     gradesGPA.push(calculatedGPADifference);
-  });
+    
+    rawGPA += calculatedGPADifference;
 
-  gradesGPA.forEach(GPA => {
-    rawGPA = rawGPA + GPA;
-  })
-  
-  totalClasses = gradesGPA.length;
+  });
 
   return [rawGPA, gradesGPA.length];
 }
 
 function calculateUnweighted() {
   const [GPADifference, numOfClasses] = findGrades();
-  let unweightedRaw = (numOfClasses*4 - GPADifference)/numOfClasses;
-  const unweightedRounded = (Math.round(unweightedRaw*100)/100);
+  let unweightedRaw = (numOfClasses * 4 - GPADifference) / numOfClasses;
 
-  return unweightedRounded;
+  return unweightedRaw.toFixed(2);
 }
 
 function calculateWeighted() {
   const [GPADifference, numOfClasses] = findGrades();
-  let weightedRaw = (numOfClasses*4 - GPADifference)/numOfClasses;
-  const unweightedRounded = (Math.round(weightedRaw*100)/100);
+  let weightedRaw = (numOfClasses * 4  - GPADifference) / numOfClasses;
 
-  return unweightedRounded;
+  return weightedRaw.toFixed(2);
 }
 
 const formattedDateTime = formatDateAndTime();
@@ -55,6 +47,7 @@ const injectedHTML = `
 
 function injectGPA() {
   const targetDiv = document.getElementById("missingAssignmentsModuleWrapper");
+
   if (targetDiv) {
     const container = document.createElement('div');
     container.innerHTML = injectedHTML;
@@ -63,6 +56,7 @@ function injectGPA() {
 }
 
 const targetURL = "https://skyward.iscorp.com/scripts/wsisa.dll/WService=wseduallenisdtx/sfgradebook001.w";
+
 if (window.location.href.startsWith(targetURL)) {
     injectGPA();
 }
