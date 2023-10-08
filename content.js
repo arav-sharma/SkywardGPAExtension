@@ -9,7 +9,7 @@ function findGrades () {
   let rawGPA = 0;
   const classGrades = document.querySelectorAll('td.fB.fWn.fIl a[data-lit="SM1"]');
 
-  classGrades.forEach((currClassGrade) => {
+  classGrades.forEach((currClassGrade) => { 
     const gradeNum = currClassGrade.textContent.trim();
 
     const calculatedGPADifference = (100 - gradeNum) * 0.05;
@@ -20,6 +20,21 @@ function findGrades () {
   });
 
   return [rawGPA, gradesGPA.length];
+}
+
+function findClasses() {
+  let classes = []; 
+  const classNames = document.querySelectorAll('table#grid_stuGradesGrid_198031_001[vpaginate="no"][grid-table="default"][zebra="true"] tbody tr');
+
+  classNames.forEach(row => {
+    const courseNameElement = row.querySelector('.classDesc a[href="javascript:void(0)"]');
+    if (courseNameElement) {
+      const courseName = courseNameElement.textContent.trim();
+      if (classes[classes.length-1] !== courseName) {
+        classes.push(courseName);
+      }
+    }
+  });
 }
 
 function calculateUnweighted() {
@@ -39,6 +54,9 @@ function calculateWeighted() {
 const formattedDateTime = formatDateAndTime();
 const unweightedGPA = calculateUnweighted();
 const weightedGPA = calculateWeighted();
+const classes = findClasses();
+
+console.log(classes);
 
 
 const injectedHTML = `
