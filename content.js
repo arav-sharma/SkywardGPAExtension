@@ -76,7 +76,7 @@ function calculateWeighted() {
   console.log(sumOfWeights);
 
   const [GPADifference, numOfClasses] = findGrades();
-  let weightedRaw = (numOfClasses * 4  - GPADifference) / numOfClasses;
+  let weightedRaw = (sumOfWeights - GPADifference) / numOfClasses;
 
   return weightedRaw.toFixed(2);
 }
