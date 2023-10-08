@@ -1,3 +1,9 @@
+let levelIIExceptions = new Set();
+levelIIExceptions.add("Calculus");
+levelIIExceptions.add("Discrete Mathematics for Computer Science");
+levelIIExceptions.add("Computer Science I");
+
+
 function formatDateAndTime() {
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
     const formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(new Date());
@@ -46,10 +52,8 @@ function calculateUnweighted() {
   return unweightedRaw.toFixed(2);
 }
 
-let levelIIExceptions = new Set();
-levelIIExceptions.add("Calculus");
-levelIIExceptions.add("Discrete Mathematics for Computer Science");
-levelIIExceptions.add("Computer Science I");
+
+
 const classes = findClasses();
 const formattedDateTime = formatDateAndTime();
 const unweightedGPA = calculateUnweighted();
@@ -99,12 +103,6 @@ function findWeight(className) {
   }
   return 4.0;
 }
-
-
-
-
-
-
 
 const injectedHTML = `
     <div id="missingAssignmentsModuleWrapper"><div id="grid_missingAssignmentsModule_gridWrap" grid-theme="summary" class="gridWrap"><div class="sf_gridTableWrap"><table vpaginate="no" id="grid_missingAssignmentsModule" grid-table="summary" zebra="false"><tbody><tr class=""><td scope="row">Your weighted GPA is: ${weightedGPA} and your unweighted GPA is: ${unweightedGPA} as of ${formattedDateTime}.</td></tr></tbody></table></div></div></div>
