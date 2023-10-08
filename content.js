@@ -24,7 +24,7 @@ function findGrades () {
 
 function findClasses() {
   let classes = []; 
-  const classNames = document.querySelectorAll('table#grid_stuGradesGrid_198031_001[vpaginate="no"][grid-table="default"][zebra="true"] tbody tr');
+  const classNames = document.querySelectorAll('table tbody tr');
 
   classNames.forEach(row => {
     const courseNameElement = row.querySelector('.classDesc a[href="javascript:void(0)"]');
