@@ -1,7 +1,51 @@
-let levelIIExceptions = new Set();
-levelIIExceptions.add("Calculus");
-levelIIExceptions.add("Discrete Mathematics for Computer Science");
-levelIIExceptions.add("Computer Science I");
+let levelIIExceptions = new Set([
+  "Calculus",
+  "Discrete Mathematics for Computer Science",
+  "JROTC Leadership",
+  "Computer Science II",
+  "Computer Science I",
+  "Medical Terminology",
+  "Pathophysiology",
+  "Anatomy & Physiology",
+  "Pharmacy I",
+  "Instructional Practices",
+  "Independent Study Journalism I, II",
+  "Advanced Journalism: Yearbook II, III (Editors)",
+  "Advanced Journalism: Newspaper II, III (Editors)",
+  "Business Computer Applications",
+  "Networking/Networking Lab",
+  "Evolving/Emerging Technologies-Esports II",
+  "Hospitality Services",
+  "Culinary Arts",
+  "Principles of Financial Accounting",
+  "Principles of Managerial Accounting",
+  "Business Principles",
+  "Audio/Video Production II",
+  "Audio/Video Production II Lab",
+  "Graphic Design & Illustration II",
+  "Graphic Design II Lab",
+  "Animation II",
+  "Animation II Lab",
+  "Interior Design II",
+  "Veterinary Medical Applications",
+  "Art Appreciation",
+  "Advanced Music Orchestra 10",
+  "Advanced Music Choir 10",
+  "Advanced Music Band 10"
+]);
+const levelIIIExceptions = new Set([
+  "Computer Science III",
+  "Robotics II",
+  "Engineering Design & Presentation II",
+  "Pharmacy II",
+  "Evolving/Emerging Technologies-Esports III",
+  "Advanced Marketing",
+  "Advanced Music Choir 11",
+  "Advanced Music Choir 12",
+  "Advanced Music Band 11",
+  "Advanced Music Band 12"
+]);
+
 
 
 function formatDateAndTime() {
@@ -87,6 +131,10 @@ function findWeight(className) {
 
   if (levelIIExceptions.has(className)) {
     return 4.5;
+  }
+
+  if (levelIIIExceptions.has(className)) {
+    return 5.0;
   }
 
   for (let i = 0; i < classNameArray.length; i++) {
