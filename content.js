@@ -46,6 +46,10 @@ function calculateUnweighted() {
   return unweightedRaw.toFixed(2);
 }
 
+let levelIIExceptions = new Set();
+levelIIExceptions.add("Calculus");
+levelIIExceptions.add("Discrete Mathematics for Computer Science");
+levelIIExceptions.add("Computer Science I");
 const classes = findClasses();
 const formattedDateTime = formatDateAndTime();
 const unweightedGPA = calculateUnweighted();
@@ -53,14 +57,9 @@ const weightedGPA = calculateWeighted();
 
 console.log(classes);
 
-let levelIIExceptions = new Set();
-levelIIExceptions.add("Calculus");
-levelIIExceptions.add("Discrete Mathematics for Computer Science");
-levelIIExceptions.add("Computer Science I");
+
 
 function calculateWeighted() {
-
-
   let sumOfWeights = 0;
 
   for (let i = 0; i < classes.length; i++) {
