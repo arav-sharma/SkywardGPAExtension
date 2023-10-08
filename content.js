@@ -103,21 +103,14 @@ const formattedDateTime = formatDateAndTime();
 const unweightedGPA = calculateUnweighted();
 const weightedGPA = calculateWeighted();
 
-console.log(classes);
-
-
 
 function calculateWeighted() {
   let sumOfWeights = 0;
 
   for (let i = 0; i < classes.length; i++) {
     const currWeight = findWeight(classes[i]);
-    console.log(`${classes[i]} ${currWeight}`);
     sumOfWeights += currWeight;
-    console.log(sumOfWeights);
   }
-
-  console.log(sumOfWeights);
 
   const [GPADifference, numOfClasses] = findGrades();
   let weightedRaw = (sumOfWeights - GPADifference) / numOfClasses;
