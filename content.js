@@ -59,7 +59,11 @@ function findGrades () {
   let rawGPA = 0;
   const classGrades = document.querySelectorAll('td.fB.fWn.fIl a[data-lit="SM1"]');
 
+  
   classGrades.forEach((currClassGrade) => { 
+    if (!currClassGrade) {
+      gradesGPA.push("0");
+    }
     const gradeNum = currClassGrade.textContent.trim();
 
     const calculatedGPADifference = (100 - gradeNum) * 0.05;
