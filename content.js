@@ -63,13 +63,11 @@ function formatDateAndTime() {
 function findGrades () {
   let gradesGPA = [];
   let rawGPA = 0;
-  const classGrades = document.querySelectorAll('td.fB.fWn.fIl a[data-lit="SM1"]');
+  const classGrades = document.querySelectorAll('[data-bkt="SEM 1"]');
 
+  console.log(classGrades);
   
   classGrades.forEach((currClassGrade) => { 
-    if (!currClassGrade) {
-      gradesGPA.push("0");
-    }
     const gradeNum = currClassGrade.textContent.trim();
 
     const calculatedGPADifference = (100 - gradeNum) * 0.05;
@@ -103,6 +101,11 @@ function findClasses() {
 // Calculates the unweighted GPA of the student
 function calculateUnweighted() {
   const [GPADifference, numOfClasses] = findGrades();
+
+  if (numOfClasses === 0) {
+    return '0.00'; 
+  }
+
   let unweightedRaw = (numOfClasses * 4 - GPADifference) / numOfClasses;
 
   return unweightedRaw.toFixed(2);
@@ -137,7 +140,6 @@ function findWeight(className) {
 const classes = findClasses();
 const formattedDateTime = formatDateAndTime();
 const unweightedGPA = calculateUnweighted();
-const weightedGPA = calculateWeighted();
 
 // Calculates the weighted GPA of the student
 function calculateWeighted() {
@@ -149,10 +151,18 @@ function calculateWeighted() {
   }
 
   const [GPADifference, numOfClasses] = findGrades();
+
+  if (numOfClasses === 0) {
+    return '0.00'; 
+  }
+
   let weightedRaw = (sumOfWeights - GPADifference) / numOfClasses;
 
   return weightedRaw.toFixed(2);
 }
+
+const weightedGPA = calculateWeighted();
+
 
 // HTML to be in added to the website
 const injectedHTML = `
