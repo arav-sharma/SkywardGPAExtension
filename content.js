@@ -1,4 +1,4 @@
-// Creates a set of courses that do not have "advanced" or "DC/Dual Credit" in the class name that are weighted as 4.50
+// Creates a set of courses that do not have "advanced" in the class name that are weighted as 4.50
 let levelIIExceptions = new Set([
   "Calculus",
   "Discrete Mathematics for Computer Science",
@@ -64,15 +64,20 @@ function findGrades () {
   let gradesGPA = [];
   let rawGPA = 0;
   const classGrades = document.querySelectorAll('[data-bkt="SEM 1"]');
-
-  console.log(classGrades);
   
   classGrades.forEach((currClassGrade) => { 
     const gradeNum = currClassGrade.textContent.trim();
 
-    const calculatedGPADifference = (100 - gradeNum) * 0.05;
+    let calculatedGPADifference = (100 - gradeNum) * 0.05;
+
+    if (gradeNum < 70) {
+      calculatedGPADifference = 0;
+    }
+
     gradesGPA.push(calculatedGPADifference);
     
+    console.log(gradeNum + ', ' + calculatedGPADifference);
+
     rawGPA += calculatedGPADifference;
 
   });
@@ -82,19 +87,23 @@ function findGrades () {
 
 // Finds the user's classes
 function findClasses() {
-  let classes = []; 
+  let classes = [];
   const classNames = document.querySelectorAll('table tbody tr');
 
   classNames.forEach((row) => {
     const courseNameElement = row.querySelector('.classDesc a[href="javascript:void(0)"]');
     if (courseNameElement) {
       const courseName = courseNameElement.textContent.trim();
-      if (classes[classes.length-1] !== courseName) {
-        classes.push(courseName);
+      
+      if (!courseName.includes("DC") && !courseName.includes("BM")) {
+        if (classes[classes.length - 1] !== courseName) {
+          classes.push(courseName);
+        }
       }
     }
   });
 
+  console.log(classes);
   return classes;
 }
 
@@ -128,7 +137,7 @@ function findWeight(className) {
       return 5.0;
     }
 
-    if (classNameArray[i] === "DC" || classNameArray[i] === "Advanced" || classNameArray[i] === "Dual") {
+    if (classNameArray[i] === "Advanced") {
      return 4.5
      
     }
