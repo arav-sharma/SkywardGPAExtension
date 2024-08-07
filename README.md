@@ -7,4 +7,4 @@ _Framework (Front-End):_
 - JavaScript
 - HTML / CSS3
 
-Last updated Jan 25th, 2024.
+Last updated August 7th, 2024. As of August 7th, 2024, the application has 186 users.
