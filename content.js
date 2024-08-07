@@ -213,7 +213,7 @@ const injectedHTML = `
                          <tr class="">
                             <td scope="row">
                                <div style="display: flex; justify-content: space-between;">
-                                   <span>2023-2024 Unweighted: ${averageUW} & Weighted: ${averageW}</span>
+                                   <span>2024-2025 Unweighted: ${averageUW} & Weighted: ${averageW}</span>
                                    <span>Last calculated on ${formattedDateTime}</span>
                                </div>
                             </td>
