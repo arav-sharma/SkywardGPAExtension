@@ -55,16 +55,16 @@ const levelIIIExceptions = new Set([
 // Finds the user's exact date, time and timezone
 function formatDateAndTime() {
     const now = new Date();
-    const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
 
     const dateFormatter = new Intl.DateTimeFormat('en-US', dateOptions);
     const timeFormatter = new Intl.DateTimeFormat('en-US', timeOptions);
 
-    const formattedDate = dateFormatter.format(now).replace(',', '');
+    const formattedDate = dateFormatter.format(now).replace(',', ',');
     const formattedTime = timeFormatter.format(now);
 
-    return `${formattedDate.replace(/ /g, '-')} at ${formattedTime}`;
+    return `${formattedDate.replace(/ /g, ' ')} at ${formattedTime}`;
 }
 
 // Find the user's SM1 Grades
@@ -72,29 +72,37 @@ function findGrades (semester) {
   let gradesGPA = [];
   let rawGPA = 0;
   let classGrades;
+  const classes = findClasses();
 
   if (semester === 1) {
     classGrades = document.querySelectorAll('[data-bkt="SEM 1"]');
   } else if (semester === 2) {
     classGrades = document.querySelectorAll('[data-bkt="SEM 2"]');
   }
-  
-  classGrades.forEach((currClassGrade) => { 
+
+
+  for (let i = 0; i < classGrades.length; i++) {
+    const currClassGrade = classGrades[i];
     const gradeNum = currClassGrade.textContent.trim();
-    let i = 1;
-    console.log(i + " " + gradeNum);
-    i++;
-    
-    let calculatedGPADifference = (100 - gradeNum) * 0.05;
 
-    if (gradeNum < 70) {
-      calculatedGPADifference = 0;
+  
+    let calculatedGPADifference = 0;
+  
+    if (gradeNum >= 70) {
+      calculatedGPADifference = (100 - gradeNum) * 0.05;
+    } else {
+      currWeight = findWeight(classes[i]);
+
+      calculatedGPADifference += currWeight;
     }
-
+  
     gradesGPA.push(calculatedGPADifference);
     rawGPA += calculatedGPADifference;
+  
+  }
 
-  });
+
+
 
   return [rawGPA, gradesGPA.length];
 }
@@ -108,7 +116,7 @@ function findClasses() {
     const courseNameElement = row.querySelector('.classDesc a[href="javascript:void(0)"]');
     if (courseNameElement) {
       const courseName = courseNameElement.textContent.trim();
-      
+
       if (!courseName.includes("DC") && !courseName.includes("BM")) {
         if (classes[classes.length - 1] !== courseName) {
           classes.push(courseName);
@@ -120,13 +128,13 @@ function findClasses() {
   return classes;
 }
 
+const [GPADifference1, numOfClasses] = findGrades(1);
+const [GPADifference2, numOfClasses2] = findGrades(2);
+
 // Calculates the unweighted GPA of the student
 function calculateUnweighted() {
-  const [GPADifference1, numOfClasses] = findGrades(1);
-  const [GPADifference2, other] = findGrades(2);
-
   if (numOfClasses === 0) {
-    return '0.00'; 
+    return '0.00';
   }
 
   const unweightedRaw1 = (numOfClasses * 4 - GPADifference1) / numOfClasses;
@@ -155,7 +163,7 @@ function findWeight(className) {
 
     if (classNameArray[i] === "Advanced") {
      return 4.5
-     
+
     }
   }
   return 4.0;
@@ -174,11 +182,8 @@ function calculateWeighted() {
     sumOfWeights += currWeight;
   }
 
-  const [GPADifference1, numOfClasses] = findGrades(1);
-  const [GPADifference2, other] = findGrades(2);
-
   if (numOfClasses === 0) {
-    return '0.00'; 
+    return '0.00';
   }
 
   let weightedRaw = (sumOfWeights - GPADifference1) / numOfClasses;
@@ -194,26 +199,45 @@ const averageUW = ((parseFloat(sem1UW) + parseFloat(sem2UW))*0.5).toFixed(2)
 const averageW = ((parseFloat(sem1W) + parseFloat(sem2W))*0.5).toFixed(2)
 
 // HTML to be in added to the website
+// Function to determine if only Semester 1 should be shown
+function shouldShowSemester1Only() {
+  const currentMonth = new Date().getMonth() + 1; // Get the current month (1-12)
+
+  // Return true if the current month is between August (8) and December (12)
+  return currentMonth >= 8 && currentMonth <= 12;
+}
+
+const currentYear = new Date().getFullYear();
+
+// Determine whether to show both semesters or only Semester 1
+const showSemester1Only = shouldShowSemester1Only();
+
+// Prepare the HTML to be injected based on the current month
 const injectedHTML = `
     <div id="missingAssignmentsModuleWrapper">
         <div id="grid_missingAssignmentsModule_gridWrap" grid-theme="summary" class="gridWrap">
             <div class="sf_gridTableWrap">
                 <table vpaginate="no" id="grid_missingAssignmentsModule" grid-table="summary" zebra="false">
                     <tbody>
+                        <!-- Always show Semester 1 -->
                         <tr class="">
                             <td scope="row">
-                                SM1 Unweighted ${sem1UW} & Weighted: ${sem1W}
+                                SM1 Unweighted GPA ${sem1UW} & SM1 Weighted GPA: ${sem1W}
                             </td>
                         </tr>
+                        <!-- Conditionally show Semester 2 if not restricted to Semester 1 only -->
+                        ${!showSemester1Only ? `
                         <tr class="">
                             <td scope="row">
-                               SM2 Unweighted ${sem2UW} & Weighted: ${sem2W}
+                               SM2 Unweighted GPA ${sem2UW} & SM2 Weighted GPA: ${sem2W}
                             </td>
                         </tr>
-                         <tr class="">
+                        ` : ''}
+                        <!-- Always show time information -->
+                        <tr class="">
                             <td scope="row">
                                <div style="display: flex; justify-content: space-between;">
-                                   <span>2024-2025 Unweighted: ${averageUW} & Weighted: ${averageW}</span>
+                                   ${!showSemester1Only ? `<span>${currentYear-1}-${currentYear} Unweighted: ${averageUW} & ${currentYear-1}-${currentYear} Weighted: ${averageW}</span>` : ''}
                                    <span>Last calculated on ${formattedDateTime}</span>
                                </div>
                             </td>
@@ -225,7 +249,7 @@ const injectedHTML = `
     </div>
 `;
 
-// Finds where to inject the HTML 
+// Function to inject the HTML
 function injectGPA() {
   const targetDiv = document.getElementById("missingAssignmentsModuleWrapper");
 
@@ -236,9 +260,9 @@ function injectGPA() {
   }
 }
 
-// Defnines targetURL and ensures that the user is on the correct URL before injected HTML (failsafe)
+// Define targetURL and ensure that the user is on the correct URL before injecting HTML (failsafe)
 const targetURL = "https://skyward.iscorp.com/scripts/wsisa.dll/WService=wseduallenisdtx/sfgradebook001.w";
 
 if (window.location.href.startsWith(targetURL)) {
-    injectGPA();
+  injectGPA();
 }
